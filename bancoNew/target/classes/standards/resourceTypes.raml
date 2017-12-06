@@ -1,0 +1,31 @@
+#%RAML 1.0 Library
+resourceTypes:  
+  collection:
+      description: Collection of <<resourcePathName>>.
+      get?: &collection-response
+        description: Get a list of <<resourcePathName>>.
+        responses: &collection-item-response
+          200:
+            body:
+              application/json:
+                type: <<typeResource>>
+                example: <<exampleCollection>>
+      post?: &collection-item-create
+        description: Add a new <<resourcePathName|!singularize>>.
+        body:
+          application/json:
+            type: <<typePostRequestResource>>
+        responses:
+          201:
+            body:
+              application/json:
+                type: <<typePostResponseResource>>
+                example: <<exampleItemResponse>>
+          404:
+      put?: &collection-item-update
+        description: Update the <<resourcePathName|!singularize>>.
+        body:
+          application/json:
+            type: <<typeItem>>
+            example: <<exampleItemRequest>>
+        responses: *collection-item-response

@@ -1,0 +1,11 @@
+{
+  "clientes": [{
+    "nome": "Jose",
+    "cpf": "376554849",
+    "endereco": "Rua X, 1268"
+}, {
+    "nome": "Maria",
+    "cpf": "596559849",
+    "endereco": "Rua Z, 358"
+  }]
+}

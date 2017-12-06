@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <munit:config mock-connectors="false" mock-inbounds="false" name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:api.xml"/>
+    </spring:beans>
+    <http:request-config name="HTTP_Request_1munit" host="localhost" port="8080" doc:name="HTTP Request Configuration"/>
+    <http:request-config name="HTTP_Request_API" host="localhost" port="8081" doc:name="HTTP Request Configuration"/>
+    <munit:test name="new-test-suite-/api/banco/mercado/preçoTest" description="Test">
+        <http:request config-ref="HTTP_Request_1munit" path="/api/banco/mercado/preco?codigo=GOOGL" method="GET" doc:name="HTTP"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <munit:assert-true message="The status code response is not correct!" condition="#[message.inboundProperties['http.status'] == '200']" doc:name="Assert True"/>
+        <munit:assert-true message="The response payload is not correct!" condition="#[payload.contains(&quot;StockQuote&quot;)]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="new-test-suite-/api/banco/mercado/pesquisaTest" description="Test">
+        <http:request config-ref="HTTP_Request_1munit" path="/api/banco/mercado/pesquisa?codigo=GOOGL" method="GET" doc:name="HTTP"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <munit:assert-true message="The status code response is not correct!" condition="#[message.inboundProperties['http.status'] == '200']" doc:name="Assert True"/>
+        <munit:assert-true message="The response payload is not correct!" condition="#[payload.contains(&quot;LookupResultList&quot;)]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="new-test-suite-get:/clientes:api-configTest" description="Test">
+        <http:request config-ref="HTTP_Request_API" path="/api/clientes" method="GET" doc:name="HTTP"/>
+        <flow-ref name="get:/clientes:api-config" doc:name="get:/clientes:api-config"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <munit:assert-true message="The status code response is not correct!" condition="#[message.inboundProperties['http.status'] == '200']" doc:name="Assert True"/>
+        <munit:assert-true message="The response payload is not correct!" condition="#[payload.contains(&quot;clientes&quot;)]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="new-test-suite-get:/clientes/{idCliente}/contas:api-configTest" description="Test">
+        <http:request config-ref="HTTP_Request_API" path="/api/clientes/1/contas" method="GET" doc:name="HTTP"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <munit:assert-true message="The status code response is not correct!" condition="#[message.inboundProperties['http.status'] == '200']" doc:name="Assert True"/>
+        <munit:assert-true message="The response payload is not correct!" condition="#[payload.contains(&quot;agencia&quot;)]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="new-test-suite-get:/clientes/{idCliente}:api-configTest" description="Test">
+        <flow-ref name="get:/clientes/{idCliente}:api-config" doc:name="Flow-ref to get:/clientes/{idCliente}:api-config"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <munit:assert-true message="The response payload is not correct!" condition="#[payload.contains(&quot;nome&quot;)]" doc:name="Assert True"/>
+    </munit:test>
+</mule>

@@ -1,0 +1,33 @@
+#%RAML 1.0 Library
+types:
+  
+  Clientes:
+    type: object
+    properties:
+      clientes?: Cliente[]
+    
+  Cliente:
+    type: object
+    properties: 
+      nome?: string
+      cpf?: string
+      endereco?: string
+      
+  Contas:
+    type: object
+    properties:
+      contas?: Conta[]
+      
+  Conta:
+    type: object
+    properties: 
+      agencia?: string
+      numeroConta?: string
+      tipo?:
+        enum: [ContaPoupanca, ContaCorrente]
+      saldo?: integer
+      
+  Mensagem:
+    type: object
+    properties: 
+      mensagem?: string

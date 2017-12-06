@@ -1,0 +1,46 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/3719e128-3546-41af-8b57-aca6361dc3eb
+title: Banco
+version: 1.0
+mediaType: application/json
+
+uses:
+  file-types: libraries\types.raml
+  resourceTypes: standards\resourceTypes.raml
+  
+/clientes:
+  type: 
+    resourceTypes.collection:
+      typeResource: file-types.Clientes
+      exampleCollection: !include examples/clientes/Clientes.json
+      typePostRequestResource: file-types.Cliente
+      typePostResponseResource: file-types.Mensagem
+      exampleItemResponse: { "mensagem": "O cliente foi adicionado com sucesso" }
+  get:
+  post:
+  /{idCliente}:
+    type: 
+      resourceTypes.collection:
+        typeResource: file-types.Cliente
+        exampleCollection: !include examples/clientes/Cliente.json
+    get:
+    
+    /contas:
+      type: 
+        resourceTypes.collection:
+          typeResource: file-types.Contas
+          exampleCollection: !include examples/contas/Contas.json
+          typePostRequestResource: file-types.Conta
+          typePostResponseResource: file-types.Mensagem
+          exampleItemResponse: { "mensagem": "A conta foi adicionado com sucesso" }
+      get:
+      post:
+      /{idConta}:
+        type: 
+          resourceTypes.collection:
+            typeResource: file-types.Conta
+            exampleCollection: !include examples/contas/Conta.json
+            typeItem: file-types.Conta
+            exampleItemRequest: !include examples/contas/Conta.json
+        get:
+        put:
